@@ -1,0 +1,68 @@
+.select {
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23636666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 12px;
+  min-width: 120px;
+}
+
+.select:hover {
+  border-color: #6366f1;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.dark-theme {
+  background: #1a1f2e;
+  border-color: #2d3748;
+  color: #e4e7eb;
+}
+
+.dark-theme:hover {
+  border-color: #818cf8;
+}
+
+.dark-theme:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+.select option {
+  background: #ffffff;
+  color: #1a1a1a;
+  padding: 0.5rem;
+}
+
+.dark-theme option {
+  background: #1a1f2e;
+  color: #e4e7eb;
+}
+
+@media (max-width: 800px) {
+  .select {
+    min-width: 100px;
+    padding: 0.5rem 1.75rem 0.5rem 0.75rem;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .select {
+    min-width: 140px;
+  }
+}
+
