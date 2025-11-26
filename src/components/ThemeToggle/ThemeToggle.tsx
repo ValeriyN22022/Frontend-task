@@ -18,5 +18,3 @@ export function ThemeToggle({ theme, onChange }: ThemeToggleProps) {
     </button>
   );
 }
-
-

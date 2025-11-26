@@ -28,7 +28,7 @@ function App() {
 
   const chartData = useMemo(
     () => getDataForVariations(selectedVariationIds, timeRange),
-    [selectedVariationIds, timeRange],
+    [timeRange],
   );
 
   const [zoomState, setZoomState] = useState<{

@@ -151,6 +151,18 @@ export const Chart = forwardRef<ChartRef, ChartProps>(({
     [variations],
   );
 
+  const colorMap = useMemo(
+    () =>
+      variations.reduce(
+        (acc, v, index) => {
+          acc[v.id] = colors[index % colors.length];
+          return acc;
+        },
+        {} as Record<VariationId, string>,
+      ),
+    [variations, colors],
+  );
+
   const handleActiveIndexChange = useCallback((index: number | null) => {
     setHoveredIndex(index);
   }, []);
@@ -243,7 +255,7 @@ export const Chart = forwardRef<ChartRef, ChartProps>(({
           URL.revokeObjectURL(url);
         }
       });
-    } catch (error) {
+    } catch {
     }
   }, [theme]);
 
@@ -272,6 +284,7 @@ export const Chart = forwardRef<ChartRef, ChartProps>(({
   }));
 
   const displayData = useMemo(() => {
+    if (!data || data.length === 0) return [];
     const mappedData = data.map((item, index) => ({ ...item, __index__: index }));
     if (zoomDomain) {
       return mappedData.slice(zoomDomain[0], zoomDomain[1] + 1);
@@ -330,20 +343,12 @@ export const Chart = forwardRef<ChartRef, ChartProps>(({
               color: theme === 'dark' ? '#fff' : '#000',
             }}
           />
-          {selectedVariationIds.map((id, index) => {
-            const color = colors[index % colors.length];
-            const commonProps = {
-              key: id,
-              dataKey: id,
-              name: variationMap[id],
-              stroke: color,
-              strokeWidth: 2,
-              dot: false,
-              activeDot: { r: 6, fill: color },
-              fill: lineStyle === 'area' ? color : 'none',
-              fillOpacity: lineStyle === 'area' ? 0.1 : 0,
-            };
-
+          {variations.map((variation) => {
+            const id = variation.id;
+            const isSelected = selectedVariationIds.includes(id);
+            const color = colorMap[id] || colors[0];
+            const opacity = isSelected ? 1 : 0;
+            
             if (lineStyle === 'area') {
               return (
                 <Area
@@ -352,11 +357,12 @@ export const Chart = forwardRef<ChartRef, ChartProps>(({
                   name={variationMap[id]}
                   stroke={color}
                   strokeWidth={2}
+                  strokeOpacity={opacity}
                   fill={color}
-                  fillOpacity={0.15}
+                  fillOpacity={isSelected ? 0.15 : 0}
                   type={getLineType()}
                   dot={false}
-                  activeDot={{ r: 6, fill: color }}
+                  activeDot={isSelected ? { r: 6, fill: color } : false}
                   baseLine={0}
                 />
               );
@@ -364,7 +370,14 @@ export const Chart = forwardRef<ChartRef, ChartProps>(({
 
             return (
               <Line
-                {...commonProps}
+                key={id}
+                dataKey={id}
+                name={variationMap[id]}
+                stroke={color}
+                strokeWidth={2}
+                strokeOpacity={opacity}
+                dot={false}
+                activeDot={isSelected ? { r: 6, fill: color } : false}
                 type={getLineType()}
               />
             );

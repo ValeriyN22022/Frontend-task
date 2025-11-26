@@ -25,12 +25,13 @@ export function calculateConversionRate(
 
 export function processRawData(
   rawData: RawDataPoint[],
-  selectedVariationIds: VariationId[],
 ): ProcessedDataPoint[] {
+  const allVariationIds = parseVariations().map((v) => v.id);
+  
   return rawData.map((point) => {
     const variations: ProcessedDataPoint['variations'] = {};
 
-    selectedVariationIds.forEach((id) => {
+    allVariationIds.forEach((id) => {
       const visits = point.visits[id] || 0;
       const conversions = point.conversions[id] || 0;
       variations[id] = {
@@ -120,14 +121,15 @@ export function aggregateByTimeRange(
 
 export function convertToChartData(
   data: ProcessedDataPoint[],
-  variationIds: VariationId[],
 ): ChartDataPoint[] {
+  const allVariationIds = parseVariations().map((v) => v.id);
+  
   return data.map((point) => {
     const chartPoint: ChartDataPoint = {
       date: point.date,
     };
 
-    variationIds.forEach((id) => {
+    allVariationIds.forEach((id) => {
       const variation = point.variations[id];
       chartPoint[id] = variation ? variation.conversionRate : 0;
     });
@@ -137,13 +139,12 @@ export function convertToChartData(
 }
 
 export function getDataForVariations(
-  selectedVariationIds: VariationId[],
   timeRange: TimeRange,
 ): ChartDataPoint[] {
   const rawData = dataJson.data as RawDataPoint[];
-  const processed = processRawData(rawData, selectedVariationIds);
+  const processed = processRawData(rawData);
   const aggregated = aggregateByTimeRange(processed, timeRange);
-  return convertToChartData(aggregated, selectedVariationIds);
+  return convertToChartData(aggregated);
 }
 
 export function getMinMaxValues(
