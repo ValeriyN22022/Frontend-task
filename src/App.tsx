@@ -27,7 +27,7 @@ function App() {
   const chartRef = useRef<ChartRef>(null);
 
   const chartData = useMemo(
-    () => getDataForVariations(selectedVariationIds, timeRange),
+    () => getDataForVariations(timeRange),
     [timeRange],
   );
 
